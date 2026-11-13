@@ -1,0 +1,139 @@
+(()=>{'use strict';
+const CATS=[['Groceries',403.76,'🛒'],['Gasoline',261.42,'⛽'],['Alcohol',233.64,'🍺'],['Subscriptions',189.91,'🔁'],['Medical',146.39,'🩺'],['Other Living Expenses',145.47,'🧾'],['Phone',132.78,'📱'],['Gambling',120,'🎲'],['Insurance',90.50,'🛡️'],['Fitness',63.95,'💪'],['Tobacco',19.32,'🚬']];
+const DEBTS=[['OneMain',3635.49,34.45],['Chase Freedom',1173.80,26.74],['Upstart',2339.77,24.12]];
+const KEY='spendwise-phone-v1',fmt=n=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD'}).format(n),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const today=()=>{let d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
+let data=load(),tab='home',month=today().slice(0,7);migrate();
+function load(){try{let a=JSON.parse(localStorage.getItem(KEY));if(a&&Array.isArray(a.transactions))return a}catch(e){}return{transactions:[],savings:1688.99,debts:Object.fromEntries(DEBTS.map(x=>[x[0],x[1]])),goal:11842,monthlyIncome:3591.01,monthlySavings:718.21,monthlyBudget:Object.fromEntries(CATS.map(x=>[x[0],x[1]])),financeLog:[]}}
+function save(){localStorage.setItem(KEY,JSON.stringify(data))}
+function migrate(){let changed=false;if(!Array.isArray(data.categories)){data.categories=CATS.map(([name,,icon])=>({name,icon}));changed=true}if(!data.monthOverrides){data.monthOverrides={};changed=true}if(!data.futureBudgets){data.futureBudgets=[];changed=true}if(changed)save()}
+const categories=()=>data.categories;
+function getBudget(c,m=month){if(data.monthOverrides[m]&&Object.prototype.hasOwnProperty.call(data.monthOverrides[m],c))return Number(data.monthOverrides[m][c]);let future=data.futureBudgets.filter(x=>x.category===c&&x.start<=m).sort((a,b)=>b.start.localeCompare(a.start))[0];return Number(future?future.amount:(data.monthlyBudget[c]??0))}
+const monthly=()=>data.transactions.filter(t=>t.date.slice(0,7)===month),spent=c=>monthly().filter(t=>t.category===c).reduce((s,t)=>s+t.amount,0),total=()=>monthly().reduce((s,t)=>s+t.amount,0),budget=()=>categories().reduce((s,c)=>s+getBudget(c.name),0);
+function bar(p){return `<div class="mini"><div class="fill ${p>100?'over':p>80?'warn':''}" style="width:${Math.min(100,Math.max(0,p))}%"></div></div>`}
+function monthHeader(){let d=new Date(month+'-02T12:00:00');return `<div class="monthnav"><button data-month="-1" aria-label="Previous month">‹</button><b>${d.toLocaleString('en-US',{month:'long',year:'numeric'})}</b><button data-month="1" aria-label="Next month">›</button></div>`}
+function render(){document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));document.getElementById('view').innerHTML=tab==='home'?home():tab==='history'?history():finances();bind()}
+function home(){let t=total(),b=budget(),remaining=b-t,p=t/b*100;let days=new Date(Number(month.slice(0,4)),Number(month.slice(5)),0).getDate(),now=today().slice(0,7)===month?new Date().getDate():month<today().slice(0,7)?days:0,daysLeft=Math.max(0,days-now);return `${monthHeader()}<section class="hero"><div class="eyebrow">${remaining>=0?'Available to spend':'Over budget'}</div><h1>${fmt(Math.abs(remaining))}</h1><div class="muted">of ${fmt(b)} monthly living expenses</div><div class="track"><div class="fill ${p>100?'over':p>80?'warn':''}" style="width:${Math.min(100,p)}%"></div></div><div class="split"><div><span class="muted">Spent</span><strong>${fmt(t)}</strong></div><div><span class="muted">${month===today().slice(0,7)?'Per day left':'Transactions'}</span><strong>${month===today().slice(0,7)?fmt(Math.max(0,remaining)/Math.max(1,daysLeft)):monthly().length}</strong></div></div></section><button class="action" id="addBtn">＋ Add expense</button><div class="sectionhead"><h2>Category budgets</h2><span class="pill">${categories().length} categories</span></div>${categories().map(({name:c,icon})=>{let s=spent(c),b=getBudget(c),p=b?s/b*100:0;return `<div class="card"><div class="catrow"><div class="symbol">${icon}</div><div class="catmain"><b>${c}</b><div class="muted">${fmt(s)} of ${fmt(b)}</div></div><div class="amount ${s>b?'overtext':''}">${fmt(b-s)}</div></div>${bar(p)}</div>`}).join('')}<p class="note">The category budgets reproduce your projected monthly amounts (${fmt(budget())} total). Debt payments and savings are tracked separately, not counted as living expenses.</p>`}
+function history(){let a=[...monthly()].sort((x,y)=>y.date.localeCompare(x.date)||y.created-x.created);return `${monthHeader()}<div class="sectionhead"><h2>Transactions</h2><span class="pill">${a.length} entries</span></div><button class="action" id="addBtn">＋ Add expense</button><div class="card">${a.length?a.map(t=>`<div class="row tx"><div><strong>${esc(t.category)}</strong><small>${esc(t.date)}${t.note?' · '+esc(t.note):''}</small></div><div class="right"><strong>${fmt(t.amount)}</strong><small><button data-edit="${esc(t.id)}">Edit</button></small></div></div>`).join(''):'<div class="empty">No transactions yet.<br>Add your first expense to start tracking.</div>'}</div><div class="row"><span class="muted">Total spending</span><b>${fmt(total())}</b></div>`}
+function finances(){let debts=Object.entries(data.debts),sum=debts.reduce((s,[,v])=>s+Number(v),0),p=Math.min(100,data.savings/data.goal*100);return `<div class="eyebrow">Your financial plan</div><h1 style="margin:8px 0 20px;font-size:29px">Savings & debt</h1><div class="grid2"><div class="metric"><small>Net monthly income</small><strong>${fmt(data.monthlyIncome)}</strong></div><div class="metric"><small>20% savings / month</small><strong>${fmt(data.monthlySavings)}</strong></div></div><div class="sectionhead"><h2>Emergency fund</h2><button class="pill" id="savingsBtn" style="border:0;color:#e7f3ff">Update</button></div><div class="card"><div class="row"><div><div class="eyebrow">Current savings</div><h2>${fmt(data.savings)}</h2></div><div style="text-align:right"><div class="muted">Goal</div><b>${fmt(data.goal)}</b></div></div><div class="track"> <div class="fill" style="width:${p}%"></div></div><p class="subtle">${fmt(Math.max(0,data.goal-data.savings))} to go · 20% of each paycheck until goal</p></div><div class="sectionhead"><h2>Outstanding debt</h2><span class="pill">${fmt(sum)}</span></div>${debts.map(([n,v])=>`<div class="card row"><div><b>${esc(n)}</b><div class="muted" style="font-size:12px">${DEBTS.find(d=>d[0]===n)[2]}% APR</div></div><div style="text-align:right"><b>${fmt(v)}</b><div><button class="secondary" data-debt="${esc(n)}" style="padding:7px 10px;margin-top:7px;font-size:12px">Record payment</button></div></div></div>`).join('')}<div class="card"><b>Our plan</b><p class="note">Save 20% of take-home pay while paying debts in APR order: OneMain → Chase Freedom → Upstart. Once all three are paid off, redirect the freed-up cash into emergency savings until the ${fmt(data.goal)} goal is met.</p></div><button class="secondary" id="backupBtn" style="width:100%;margin:10px 0">Export backup</button><button class="secondary" id="restoreBtn" style="width:100%">Restore backup</button><p class="note">Starting debt balances and savings were taken from your November 2026 plan. Update them as payments and deposits occur. This app does not connect to your bank or automatically accrue interest.</p>`}
+function bind(){document.querySelectorAll('[data-month]').forEach(b=>b.onclick=()=>{let d=new Date(month+'-02T12:00:00');d.setMonth(d.getMonth()+Number(b.dataset.month));month=d.toISOString().slice(0,7);render()});document.getElementById('addBtn')?.addEventListener('click',()=>expense());document.querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>expense(data.transactions.find(t=>t.id===b.dataset.edit)));document.querySelectorAll('[data-debt]').forEach(b=>b.onclick=()=>debt(b.dataset.debt));document.getElementById('savingsBtn')?.addEventListener('click',savings);document.getElementById('backupBtn')?.addEventListener('click',backup);document.getElementById('restoreBtn')?.addEventListener('click',restore)}
+function modal(html){document.getElementById('modalBody').innerHTML=html;document.getElementById('modal').hidden=false;document.querySelector('.sheet').scrollTop=0}function close(){document.getElementById('modal').hidden=true;document.querySelector('.sheet').style.transform='';document.querySelector('.sheet').style.transition=''}document.querySelector('[data-close]').onclick=close;document.getElementById('settingsBtn').onclick=settings;
+function settings(){modal(`<h2>Manage categories</h2><p class="note">Editing ${esc(month)}. A monthly change affects only this month unless you choose “This month & all future months.” Previous months keep their own budgets.</p>${categories().map((c,i)=>`<div class="card row reorder-item" data-category-index="${i}"><button class="reorder-grip" aria-label="Drag to reorder ${esc(c.name)}" title="Drag to reorder">☰</button><div class="reorder-label"><b>${esc(c.icon)} ${esc(c.name)}</b><div class="muted">${fmt(getBudget(c.name))} for ${esc(month)}</div></div><button class="secondary" data-cat-edit="${i}">Edit</button></div>`).join('')}<button class="action" id="newCat">＋ Add category</button><div class="btnrow"><button class="secondary" id="settingsClose">Done</button><button class="secondary" id="resetBudgets">Restore original budgets</button></div><p class="note">Categories with transactions cannot be deleted. Renaming one also updates its historical transactions.</p>`);document.querySelectorAll('[data-cat-edit]').forEach(b=>b.onclick=()=>categoryEditor(Number(b.dataset.catEdit)));document.getElementById('newCat').onclick=()=>categoryEditor(-1);enableCategoryReordering();document.getElementById('settingsClose').onclick=close;document.getElementById('resetBudgets').onclick=()=>{modal(`<h2>Restore budgets?</h2><p class="note">Restore original category amounts for ${esc(month)} only? Your transactions will not change.</p><div class="btnrow"><button class="secondary" id="no">Cancel</button><button class="primary" id="yes">Restore this month</button></div>`);document.getElementById('no').onclick=settings;document.getElementById('yes').onclick=()=>{data.monthOverrides[month]=Object.fromEntries(CATS.filter(([n])=>categories().some(c=>c.name===n)).map(([n,v])=>[n,v]));save();settings();render()}}}
+function categoryEditor(i){let old=i>=0?categories()[i]:null;modal(`<h2>${old?'Edit':'Add'} category</h2><label class="field">Category name</label><input id="catName" maxlength="45" value="${esc(old?.name??'')}" placeholder="Category name"><label class="field">Icon (emoji)</label><input id="catIcon" maxlength="8" value="${esc(old?.icon??'🧾')}"><label class="field">Monthly budget ($)</label><input id="catBudget" type="number" min="0" step="0.01" inputmode="decimal" value="${old?getBudget(old.name).toFixed(2):'0.00'}"><label class="field">Apply budget change</label><select id="scope"><option value="month">${esc(month)} only</option><option value="future">This month & all future months</option></select><p class="note">Changes to this month won't affect earlier months. Future changes become the default from ${esc(month)} onward, unless another month's budget is explicitly overridden.</p><p id="catError" class="danger note"></p><div class="btnrow"><button class="secondary" id="cancel">Cancel</button><button class="primary" id="saveCat">Save</button></div>${old?'<button class="secondary danger" id="deleteCat" style="width:100%;margin-top:12px">Delete category</button>':''}`);document.getElementById('cancel').onclick=settings;document.getElementById('saveCat').onclick=()=>{let name=document.getElementById('catName').value.trim(),icon=document.getElementById('catIcon').value.trim()||'🧾',raw=document.getElementById('catBudget').value,amount=Number(raw),scope=document.getElementById('scope').value,error=document.getElementById('catError');if(!name||!raw||!Number.isFinite(amount)||amount<0){error.textContent='Enter a name and a valid nonnegative budget.';return}if(categories().some((c,j)=>j!==i&&c.name.toLowerCase()===name.toLowerCase())){error.textContent='A category with that name already exists.';return}amount=Math.round(amount*100)/100;if(old&&name!==old.name){data.transactions.forEach(t=>{if(t.category===old.name)t.category=name});if(Object.prototype.hasOwnProperty.call(data.monthlyBudget,old.name)){data.monthlyBudget[name]=data.monthlyBudget[old.name];delete data.monthlyBudget[old.name]}Object.values(data.monthOverrides).forEach(o=>{if(Object.prototype.hasOwnProperty.call(o,old.name)){o[name]=o[old.name];delete o[old.name]}});data.futureBudgets.forEach(x=>{if(x.category===old.name)x.category=name})}if(old){categories()[i]={name,icon}}else{categories().push({name,icon});data.monthlyBudget[name]=0}if(scope==='month'){data.monthOverrides[month]??={};data.monthOverrides[month][name]=amount}else{data.futureBudgets=data.futureBudgets.filter(x=>!(x.category===name&&x.start===month));data.futureBudgets.push({category:name,start:month,amount});if(data.monthOverrides[month])delete data.monthOverrides[month][name]}save();settings();render()};if(old)document.getElementById('deleteCat').onclick=()=>{if(data.transactions.some(t=>t.category===old.name)){document.getElementById('catError').textContent='This category has transactions. Rename it instead so no history is lost.';return}categories().splice(i,1);delete data.monthlyBudget[old.name];Object.values(data.monthOverrides).forEach(o=>delete o[old.name]);data.futureBudgets=data.futureBudgets.filter(x=>x.category!==old.name);save();settings();render()}}
+
+function expense(t){let edit=!!t,opts=categories().map(({name:n})=>`<option value="${esc(n)}" ${t?.category===n?'selected':''}>${n}</option>`).join('');modal(`<h2>${edit?'Edit':'Add'} expense</h2><form id="expenseForm"><label class="field">Amount ($)</label><input id="amt" type="number" inputmode="decimal" min="0.01" step="0.01" required placeholder="0.00" value="${t?.amount??''}"><label class="field">Category</label><select id="cat">${opts}</select><label class="field">Date</label><input id="date" type="date" required value="${t?.date??today()}"><label class="field">Note (optional)</label><input id="note" maxlength="140" placeholder="Where did you spend it?" value="${esc(t?.note??'')}"><div class="btnrow"><button type="button" class="secondary" id="cancel">Cancel</button><button class="primary">${edit?'Save changes':'Save expense'}</button></div>${edit?'<button type="button" class="secondary danger" id="delete" style="width:100%;margin-top:12px">Delete expense</button>':''}</form>`);document.getElementById('cancel').onclick=close;document.getElementById('expenseForm').onsubmit=e=>{e.preventDefault();let amount=Number(document.getElementById('amt').value);if(!Number.isFinite(amount)||amount<=0)return;let entry={id:t?.id??(crypto.randomUUID?crypto.randomUUID():String(Date.now())),created:t?.created??Date.now(),amount:Math.round(amount*100)/100,category:document.getElementById('cat').value,date:document.getElementById('date').value,note:document.getElementById('note').value.trim()};if(edit)data.transactions=data.transactions.map(x=>x.id===t.id?entry:x);else data.transactions.push(entry);month=entry.date.slice(0,7);save();close();render()};if(edit)document.getElementById('delete').onclick=()=>{data.transactions=data.transactions.filter(x=>x.id!==t.id);save();close();render()}}
+function savings(){modal(`<h2>Update savings</h2><p class="note">Enter a deposit (positive) or withdrawal (negative). This doesn't count as spending.</p><label class="field">Change in savings ($)</label><input id="change" type="number" step="0.01" inputmode="decimal" placeholder="331.48"><div class="btnrow"><button class="secondary" id="cancel">Cancel</button><button class="primary" id="apply">Apply</button></div>`);document.getElementById('cancel').onclick=close;document.getElementById('apply').onclick=()=>{let n=Number(document.getElementById('change').value);if(!Number.isFinite(n)||!document.getElementById('change').value)return;data.savings=Math.round((data.savings+n)*100)/100;data.financeLog.push({date:today(),type:'savings',amount:n});save();close();render()}}
+function debt(name){modal(`<h2>${esc(name)} payment</h2><p class="note">Enter how much your loan or card balance actually decreased (principal reduction). Interest and fees aren't calculated automatically.</p><label class="field">Principal reduction ($)</label><input id="change" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0.00"><div class="btnrow"><button class="secondary" id="cancel">Cancel</button><button class="primary" id="apply">Apply</button></div>`);document.getElementById('cancel').onclick=close;document.getElementById('apply').onclick=()=>{let n=Number(document.getElementById('change').value);if(!Number.isFinite(n)||n<=0)return;data.debts[name]=Math.max(0,Math.round((data.debts[name]-n)*100)/100);data.financeLog.push({date:today(),type:'debt',name,amount:n});save();close();render()}}
+function backup(){let blob=new Blob([JSON.stringify({app:'Spendwise',version:1,exportedAt:new Date().toISOString(),data},null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=`spendwise-backup-${today()}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(url),2000)}
+function restore(){modal(`<h2>Restore backup</h2><p class="note">Restoring replaces the data currently saved on this phone. Export a backup first if you want to keep it.</p><input type="file" id="file" accept="application/json,.json"><div class="btnrow"><button class="secondary" id="cancel">Cancel</button><button class="primary" id="import">Restore</button></div><p id="error" class="danger note"></p>`);document.getElementById('cancel').onclick=close;document.getElementById('import').onclick=async()=>{try{let f=document.getElementById('file').files[0];if(!f)throw Error('Choose a backup file.');let v=JSON.parse(await f.text());if(v.app!=='Spendwise'||!v.data||!Array.isArray(v.data.transactions)||!v.data.monthlyBudget||!v.data.debts)throw Error('This is not a valid Spendwise backup.');data=v.data;save();close();render()}catch(e){document.getElementById('error').textContent=e.message}}}
+
+// iPhone-safe category sorting: listen on document so moving DOM rows cannot lose the gesture.
+function enableCategoryReordering(){
+  const sheet=document.querySelector('.sheet');
+  const list=[...document.querySelectorAll('.reorder-item')];
+  list.forEach(item=>{
+    const grip=item.querySelector('.reorder-grip');
+    grip.addEventListener('touchstart',startTouch,{passive:false});
+    grip.addEventListener('pointerdown',startMouse);
+    function startTouch(e){
+      if(e.touches.length!==1)return;
+      e.preventDefault();
+      begin(e.touches[0].clientY,'touch',e.touches[0].identifier);
+    }
+    function startMouse(e){
+      if(e.pointerType==='touch'||e.button!==0)return;
+      e.preventDefault();
+      begin(e.clientY,'mouse',e.pointerId);
+    }
+    function begin(startY,kind,id){
+      if(document.querySelector('.reorder-ghost'))return;
+      const rect=item.getBoundingClientRect();
+      const placeholder=document.createElement('div');
+      placeholder.className='reorder-placeholder';
+      placeholder.style.height=rect.height+'px';
+      placeholder.style.marginBottom=getComputedStyle(item).marginBottom;
+      item.before(placeholder);
+      const ghost=item.cloneNode(true);
+      ghost.classList.add('reorder-ghost','reordering');
+      ghost.removeAttribute('data-category-index');
+      ghost.style.cssText=`position:fixed;z-index:30;pointer-events:none;left:${rect.left}px;top:${rect.top}px;width:${rect.width}px;height:${rect.height}px;margin:0;`;
+      document.body.appendChild(ghost);
+      item.style.display='none';
+      const offset=startY-rect.top;
+      let lastY=startY,active=true,scrollTimer=null;
+      function position(y){
+        lastY=y;
+        ghost.style.top=(y-offset)+'px';
+        const candidates=[...document.querySelectorAll('.reorder-item')].filter(r=>r!==item);
+        const target=candidates.find(r=>y<r.getBoundingClientRect().top+r.getBoundingClientRect().height/2);
+        if(target)target.before(placeholder);
+        else if(candidates.length)candidates[candidates.length-1].after(placeholder);
+      }
+      function autoScroll(){
+        if(!active)return;
+        const r=sheet.getBoundingClientRect();
+        if(lastY>r.bottom-65)sheet.scrollTop+=Math.min(18,(lastY-(r.bottom-65))*.55+3);
+        else if(lastY<r.top+85)sheet.scrollTop-=Math.min(18,((r.top+85)-lastY)*.55+3);
+        position(lastY);
+        scrollTimer=requestAnimationFrame(autoScroll);
+      }
+      function onTouchMove(e){
+        const t=[...e.changedTouches].find(t=>t.identifier===id);
+        if(!t)return;
+        e.preventDefault();position(t.clientY);
+      }
+      function onPointerMove(e){if(e.pointerId===id){e.preventDefault();position(e.clientY)}}
+      function onTouchEnd(e){if([...e.changedTouches].some(t=>t.identifier===id))finish(false)}
+      function onTouchCancel(e){if([...e.changedTouches].some(t=>t.identifier===id))finish(true)}
+      function onPointerEnd(e){if(e.pointerId===id)finish(e.type==='pointercancel')}
+      function finish(cancel){
+        if(!active)return;
+        active=false;cancelAnimationFrame(scrollTimer);
+        document.removeEventListener('touchmove',onTouchMove);
+        document.removeEventListener('touchend',onTouchEnd);
+        document.removeEventListener('touchcancel',onTouchCancel);
+        document.removeEventListener('pointermove',onPointerMove);
+        document.removeEventListener('pointerup',onPointerEnd);
+        document.removeEventListener('pointercancel',onPointerEnd);
+        if(!cancel)placeholder.replaceWith(item);
+        else placeholder.remove();
+        item.style.display='';ghost.remove();
+        if(cancel)return;
+        const reordered=[...document.querySelectorAll('.reorder-item')].map(r=>categories()[Number(r.dataset.categoryIndex)]);
+        if(reordered.length===categories().length){data.categories=reordered;save();settings();render()}
+      }
+      if(kind==='touch'){
+        document.addEventListener('touchmove',onTouchMove,{passive:false});
+        document.addEventListener('touchend',onTouchEnd);
+        document.addEventListener('touchcancel',onTouchCancel);
+      }else{
+        document.addEventListener('pointermove',onPointerMove,{passive:false});
+        document.addEventListener('pointerup',onPointerEnd);
+        document.addEventListener('pointercancel',onPointerEnd);
+      }
+      scrollTimer=requestAnimationFrame(autoScroll);
+    }
+  });
+}
+// The top handle dismisses any modal without interfering with scrolling inside it.
+(()=>{const handle=document.querySelector('.handle'),sheet=document.querySelector('.sheet');
+  handle.addEventListener('pointerdown',e=>{
+    if(e.button!==0&&e.pointerType==='mouse')return;
+    const start=e.clientY;let offset=0;
+    handle.setPointerCapture(e.pointerId);
+    const move=ev=>{offset=Math.max(0,ev.clientY-start);sheet.style.transition='none';sheet.style.transform=`translateY(${offset}px)`};
+    const finish=()=>{cleanup();sheet.style.transition='transform 180ms ease';if(offset>85){close()}else{sheet.style.transform='';setTimeout(()=>sheet.style.transition='',200)}};
+    const cancel=()=>{cleanup();sheet.style.transform='';sheet.style.transition=''};
+    const cleanup=()=>{handle.removeEventListener('pointermove',move);handle.removeEventListener('pointerup',finish);handle.removeEventListener('pointercancel',cancel)};
+    handle.addEventListener('pointermove',move);handle.addEventListener('pointerup',finish);handle.addEventListener('pointercancel',cancel);
+  });
+  handle.addEventListener('keydown',e=>{if(e.key==='Escape'||e.key==='Enter'||e.key===' '){e.preventDefault();close()}});
+})();
+// iOS Safari: suppress gesture zoom and double-tap zoom; preserve taps and scrolling.
+document.addEventListener('gesturestart',e=>e.preventDefault(),{passive:false});
+document.addEventListener('gesturechange',e=>e.preventDefault(),{passive:false});
+let lastTouchEnd=0;
+document.addEventListener('touchend',e=>{const now=Date.now();if(now-lastTouchEnd<300&&e.changedTouches.length===1)e.preventDefault();lastTouchEnd=now},{passive:false});
+
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{tab=b.dataset.tab;render();window.scrollTo(0,0)});render();if('serviceWorker'in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('./sw.js').catch(()=>{});
+})();
