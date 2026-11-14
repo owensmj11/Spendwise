@@ -26,3 +26,6 @@ button{touch-action:manipulation}
 
 /* Spendwise 2.3.1 */
 .earnings-row{padding:8px 0;font-size:14px;gap:14px}.earnings-row b{white-space:nowrap}.monthnav .month-title{border:0;background:transparent;font-size:18px;font-weight:800;color:#e9eef8;padding:10px}.budget-track{position:relative;overflow:visible}.budget-blue,.budget-excess,.budget-negative{position:absolute;top:0;height:100%;border-radius:8px}.budget-blue{background:#7cb9ff}.budget-excess{background:linear-gradient(90deg,#a5c3ed,#ed929a)}.budget-negative{background:linear-gradient(90deg,#54bf88,#7cb9ff)}.budget-marker{position:absolute;top:-2px;transform:translateX(-50%);height:9px;border-left:1px solid #dce8f8;font-size:9px;color:#b7c4d5;padding-top:12px;white-space:nowrap}.category-wrap .budget-track:has(.budget-marker){margin-bottom:20px}.inline-calendar{margin-top:-7px}.inline-calendar .calendar-grid .calday{min-height:68px;text-align:left;padding:5px 3px}.inline-calendar .calendar-grid small{font-size:9px;line-height:1.25}.inline-calendar .payday{color:#a8f0b6;font-weight:800}.inline-calendar .daily-spend{color:#c5dcff}
+
+/* Payroll taxes: intentionally prominent without changing other dashboard amounts. */
+.taxes-red{color:#ff686e!important}
