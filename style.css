@@ -137,3 +137,24 @@ nav button .calendar-nav-icon{display:block;width:27px;height:27px;margin:0 auto
 .category-move button:disabled{opacity:.35}
 .reorder-label{min-width:0;flex:1}
 @media(max-width:380px){.category-move .secondary{padding:7px 8px;font-size:12px}.reorder-item{gap:5px}}
+
+/* 2.3.13 — consistent iOS modal control widths */
+.sheet,.sheet form,.sheet .card{min-width:0}
+.sheet input,.sheet select,.sheet textarea{display:block;box-sizing:border-box;width:100%;max-width:100%;min-width:0;margin-left:0;margin-right:0}
+.sheet input[type=date]{-webkit-appearance:none;appearance:none;min-height:51px}
+.sheet input[type=file]{font-size:13px}
+/* Debt is a liability; preserve the existing payment interactions. */
+.debt-total-pill{background:linear-gradient(115deg,#642a3b,#401f34);color:#ffbac5;border:1px solid #814050}
+.debt-progress-card{background:linear-gradient(120deg,#3d202e,#282033 60%,#1a2132);border-color:#633646}
+.debt-progress-card summary{display:flex;justify-content:space-between;align-items:center;gap:12px;cursor:pointer;list-style:none;color:#ffe4e8}
+.debt-progress-card summary::-webkit-details-marker{display:none}
+.debt-progress-card summary strong{color:#ffabb9;text-align:right}
+.debt-progress-card summary small{display:block;font-size:12px;font-weight:400;color:#cf9daa;margin-top:5px}
+.debt-progress-info{display:flex;justify-content:space-between;gap:12px;align-items:center;margin:16px 0 7px;font-size:12px;color:#c9b2bf}
+.debt-progress-info b{white-space:nowrap;color:#e8eaf3}
+.debt-progress-track{height:9px;background:#603849;border-radius:12px;overflow:hidden;margin-bottom:14px}
+.debt-progress-fill{height:100%;border-radius:12px;background:linear-gradient(90deg,#64bf93,#a8f0b6)}
+.debt-progress-fill.utilization{background:linear-gradient(90deg,#e99a63,#f06c78)}
+.category-icon-edit{border:0;background:#26384a;border-radius:12px;min-width:42px;min-height:42px;font-size:23px;cursor:pointer}
+.reorder-label{display:flex;align-items:center;gap:10px;min-width:0;flex-wrap:wrap}
+.reorder-label .muted{width:100%}
