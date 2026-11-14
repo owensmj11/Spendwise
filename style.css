@@ -190,3 +190,6 @@ nav button .calendar-nav-icon{display:block;width:27px;height:27px;margin:0 auto
 .debt-group-row .debt-group-details .row{padding:8px 0;border-bottom:1px solid #344056}
 
 .debt-group-row summary{display:block}.debt-heading{display:flex;align-items:center;justify-content:space-between;gap:12px}.debt-group-row summary .debt-progress-info{pointer-events:none}
+
+/* 2.3.15 */
+.snapshot-debt{background:linear-gradient(130deg,rgba(195,35,54,.46),rgba(105,20,37,.18));border-radius:12px}.snapshot-debt strong{color:#ffbdc4}.inline-category-editor{padding:12px 15px 18px;background:#15263a;border:1px solid #39506b;border-radius:12px;margin:5px 0 13px}.inline-category-editor input,.inline-category-editor select{width:100%}#view{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}html,body{overflow-x:hidden}.snapshot-cell strong{font-size:clamp(15px,4.2vw,22px)}
