@@ -124,3 +124,10 @@ nav button .calendar-nav-icon{display:block;width:27px;height:27px;margin:0 auto
 .calendar-detail-text{flex:1;min-width:0}.calendar-detail-text b{display:block;font-size:14px;overflow-wrap:anywhere}.calendar-detail-text small{display:block;color:#9bacc0;font-size:11px;margin-top:3px}
 .calendar-detail-row strong{font-size:13px;white-space:nowrap}.calendar-detail-row button{font-size:11px;padding:7px 8px;white-space:nowrap}
 .calendar-positive{color:#a8f0b6}
+
+/* 2.3.11: scheduled bills are muted until recorded; debt circles change on payment. */
+.cal-logo-stack .cal-debt-icon.cal-debt-unpaid{color:#ff9ba6!important;background:#612634!important}
+.cal-logo-stack .cal-debt-icon.cal-debt-paid{color:#a7f2bd!important;background:#205a42!important}
+.inline-calendar .cal-scheduled-total.cal-bill-unpaid{color:#a6adba}
+.inline-calendar .cal-scheduled-total.cal-bill-paid{color:#83bba0}
+.inline-calendar .cal-debt-total{display:block;text-align:center;color:#a9c9ff;font-size:10px;font-weight:750;padding-top:2px;white-space:nowrap}
