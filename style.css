@@ -16,3 +16,6 @@ button{touch-action:manipulation}
 .reorder-placeholder{border:2px dashed #a8f0b6;border-radius:18px;background:#a8f0b615;min-height:78px}
 .reorder-ghost{box-shadow:0 16px 35px #0009;opacity:.96;transform:scale(1.015);will-change:top}
 .reorder-grip{touch-action:none;-webkit-touch-callout:none}
+
+/* Spendwise 2.2 */
+.calendar-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:3px;margin:16px 0}.calendar-grid>div,.calendar-grid>b{min-width:0;padding:5px 2px;text-align:center}.calendar-grid>div.calday{min-height:62px;border:1px solid #34435a;border-radius:6px}.calendar-grid small{display:block;overflow-wrap:anywhere;font-size:9px;color:#a8f0b6;margin-top:5px}.calendar-grid>b{color:#8fa0b6;font-size:11px}textarea{background:#111b2b;color:#e7f3ff;border:1px solid #34435a}button[data-category]{cursor:pointer}
