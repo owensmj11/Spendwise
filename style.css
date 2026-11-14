@@ -51,3 +51,44 @@ button{touch-action:manipulation}
 .annual-card[open] summary{padding-bottom:13px;border-bottom:1px solid #304158;margin-bottom:8px}
 .annual-card .row{padding:9px 0;font-size:13px;gap:14px}.annual-card .row b{text-align:right}
 #savingsSection,#debtSection{scroll-margin-top:20px}
+
+/* Spendwise 2.3.4 — compact monthly tracking */
+nav button{font-size:10px;min-width:0;white-space:nowrap}
+nav button .calendar-nav-icon{display:block;width:27px;height:27px;margin:0 auto 4px}
+.calendar-nav-icon svg{width:100%;height:100%}
+.category-wrap{position:relative;padding-top:21px}
+.rollover-corner{position:absolute;right:17px;top:6px;font-size:10px;font-weight:850;letter-spacing:.1px}
+.rollover-green{color:#65f2a1}.rollover-red{color:#ff5b67}
+.category-wrap .cat-toggle{padding-top:10px}
+.modal-month{font-size:15px;font-weight:750;color:#9aabc1;margin:-3px 0 18px}
+.modal-month span{font-size:12px;opacity:.6}
+.inline-calendar{padding:12px 11px}
+.inline-calendar .calendar-grid{gap:3px}
+.inline-calendar .calendar-grid .calday{min-height:80px;padding:4px 3px;overflow:hidden}
+.inline-calendar .calendar-grid .calday.cal-sub{background:#101a2a}
+.inline-calendar .calendar-grid .calday.cal-pay{background:#18342b;border-color:#426d59}
+.inline-calendar .calendar-grid .calday.cal-pay.cal-sub{background:linear-gradient(140deg,#193a2d 50%,#101a2a 50%)}
+.inline-calendar .calendar-grid .calday>b{font-size:13px}
+.inline-calendar .calendar-grid .daily-spend{color:#ff9a9d;font-size:10px;white-space:nowrap;letter-spacing:-.3px}
+.inline-calendar .calendar-grid .daily-spend.credit{color:#75f0a5}
+.cal-pay-amount{text-align:center;margin-top:4px;color:#92f3b1}
+.cal-pay-amount strong{font-size:20px;display:block;line-height:1}
+.inline-calendar .cal-pay-amount small{color:#92f3b1;font-size:10px;white-space:nowrap;letter-spacing:-.5px}
+.cal-bill{text-align:center;margin-top:5px}
+.cal-bill .sub-logo{width:20px;height:20px;object-fit:contain}
+.cal-bill .sub-logo-fallback{font-size:17px}
+.inline-calendar .cal-bill small{color:#d4dcea;font-size:10px;white-space:nowrap;letter-spacing:-.4px}
+.employer-label{font-size:13px;font-weight:750;color:#9cabc1;letter-spacing:.3px;margin-bottom:6px}
+.comp-toggle{width:100%;background:none;border:0;color:#e9eef8;text-align:left;padding:0 0 16px;display:flex;justify-content:space-between;align-items:center;gap:8px;cursor:pointer}
+.comp-toggle span:first-child{font-size:clamp(30px,8vw,42px);font-weight:850;letter-spacing:-1.3px}
+.comp-arrow{font-size:18px;color:#9caec3}
+.comp-expanded{margin-top:17px;border-top:1px solid #304158;padding-top:13px}
+.comp-expanded .annual-card{border:1px solid #304158;border-radius:13px;padding:10px;margin-top:10px}
+.update-payroll{width:100%;margin:10px 0 4px}
+.history-chart{margin:8px 0 15px}
+.chart-heading{font-size:12px;color:#9aabc1;font-weight:750;margin-bottom:10px}
+.chart-bars{display:flex;gap:5px;align-items:end;justify-content:space-between;border-bottom:1px solid #35475d;padding:0 0 4px}
+.chart-column{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:end;gap:5px}
+.chart-column .chart-bar{background:#82c7ff;width:72%;border-radius:5px 5px 0 0;min-height:4px}
+.chart-column .chart-value{font-size:9px;color:#b8c8db;white-space:nowrap}
+.chart-column small{font-size:10px;color:#99a7ba}
