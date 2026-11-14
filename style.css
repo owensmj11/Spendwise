@@ -193,3 +193,8 @@ nav button .calendar-nav-icon{display:block;width:27px;height:27px;margin:0 auto
 
 /* 2.3.15 */
 .snapshot-debt{background:linear-gradient(130deg,rgba(195,35,54,.46),rgba(105,20,37,.18));border-radius:12px}.snapshot-debt strong{color:#ffbdc4}.inline-category-editor{padding:12px 15px 18px;background:#15263a;border:1px solid #39506b;border-radius:12px;margin:5px 0 13px}.inline-category-editor input,.inline-category-editor select{width:100%}#view{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}html,body{overflow-x:hidden}.snapshot-cell strong{font-size:clamp(15px,4.2vw,22px)}
+
+/* Fix #4: uninterrupted center divider across both snapshot rows. */
+.snapshot-grid{position:relative}
+.snapshot-grid::before{content:"";position:absolute;top:16px;bottom:16px;left:50%;width:1px;background:#304158;pointer-events:none}
+.snapshot-grid .snapshot-cell:nth-child(odd){border-right:0}
