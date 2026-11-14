@@ -131,3 +131,9 @@ nav button .calendar-nav-icon{display:block;width:27px;height:27px;margin:0 auto
 .inline-calendar .cal-scheduled-total.cal-bill-unpaid{color:#a6adba}
 .inline-calendar .cal-scheduled-total.cal-bill-paid{color:#83bba0}
 .inline-calendar .cal-debt-total{display:block;text-align:center;color:#a9c9ff;font-size:10px;font-weight:750;padding-top:2px;white-space:nowrap}
+/* 2.3.12: accessible category ordering and paycheck details */
+.category-move{display:flex;gap:5px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+.category-move .secondary{padding:8px 10px;min-width:35px}
+.category-move button:disabled{opacity:.35}
+.reorder-label{min-width:0;flex:1}
+@media(max-width:380px){.category-move .secondary{padding:7px 8px;font-size:12px}.reorder-item{gap:5px}}
