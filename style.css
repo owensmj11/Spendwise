@@ -100,3 +100,6 @@ nav button .calendar-nav-icon{display:block;width:27px;height:27px;margin:0 auto
 
 /* 2.3.8 recurring payment editor */
 .recurring-row{gap:10px}.recurring-icon{flex:0 0 30px;display:flex;align-items:center;justify-content:center}.recurring-details{flex:1;min-width:0}.recurring-details small{display:block;white-space:normal;overflow-wrap:anywhere;color:#9eafc5;margin-top:4px}.recurring-row .secondary{flex-shrink:0}
+
+/* 2.3.9: recurring group and compact carryover */
+.rollover-compact{display:flex;justify-content:flex-end;margin:-7px 0 5px}.rollover-compact .rollover-info{font-size:12px;padding:2px 5px}.recurring-label{margin:15px 0 7px;font-weight:700}.recurring-item{display:flex;align-items:center;gap:9px;padding:10px 0;border-bottom:1px solid #2b3a4e}.recurring-item-icon{width:29px;flex:none}.recurring-item-name{flex:1;min-width:0;font-size:13px;overflow-wrap:anywhere}.recurring-item-name small,.recurring-item-value small,.recurring-status{display:block;font-size:11px;color:#95a5bb;margin-top:4px}.recurring-item-value{text-align:right;font-size:13px;font-weight:750;white-space:nowrap}.recurring-record{border:1px solid #426354;background:#213b34;color:#a8f0b6;border-radius:9px;padding:8px 10px;font-size:17px}.sub-name .recurring-status{font-weight:400}
