@@ -103,3 +103,24 @@ nav button .calendar-nav-icon{display:block;width:27px;height:27px;margin:0 auto
 
 /* 2.3.9: recurring group and compact carryover */
 .rollover-compact{display:flex;justify-content:flex-end;margin:-7px 0 5px}.rollover-compact .rollover-info{font-size:12px;padding:2px 5px}.recurring-label{margin:15px 0 7px;font-weight:700}.recurring-item{display:flex;align-items:center;gap:9px;padding:10px 0;border-bottom:1px solid #2b3a4e}.recurring-item-icon{width:29px;flex:none}.recurring-item-name{flex:1;min-width:0;font-size:13px;overflow-wrap:anywhere}.recurring-item-name small,.recurring-item-value small,.recurring-status{display:block;font-size:11px;color:#95a5bb;margin-top:4px}.recurring-item-value{text-align:right;font-size:13px;font-weight:750;white-space:nowrap}.recurring-record{border:1px solid #426354;background:#213b34;color:#a8f0b6;border-radius:9px;padding:8px 10px;font-size:17px}.sub-name .recurring-status{font-weight:400}
+
+/* 2.3.10: compact, accessible mobile calendar and daily sheet */
+.inline-calendar .calendar-grid .cal-touch{display:flex;flex-direction:column;align-items:stretch;text-align:left;min-width:0;min-height:84px;padding:5px 3px;border:1px solid #34435a;border-radius:7px;background:#101a2a;color:#e9eef8;font:inherit;cursor:pointer;overflow:hidden}
+.inline-calendar .calendar-grid .cal-touch.cal-pay{background:#173328;border-color:#426d59}
+.inline-calendar .calendar-grid .cal-touch:focus-visible{outline:2px solid #9de9b5;outline-offset:1px}
+.cal-logo-stack{display:flex;align-items:center;justify-content:center;margin-top:6px;min-height:23px;padding-left:5px}
+.cal-logo-stack>*{flex:0 0 21px;width:21px;height:21px;min-width:0;margin-left:-6px;border-radius:50%;background:#20344a;object-fit:contain;display:flex;align-items:center;justify-content:center;font-size:13px;border:1px solid #142235;overflow:hidden}
+.cal-logo-stack .sub-logo{width:21px;height:21px;object-fit:contain}
+.cal-logo-stack em{font-size:9px;font-style:normal;color:#e9eef8}
+.cal-income-icon{background:#176b48!important;color:#a8f0c0;font-size:16px!important;font-weight:800}
+.cal-debt-icon{color:#f48c99!important;background:#5c2430!important}
+.cal-scheduled-total,.cal-income-total{display:block;text-align:center;font-size:10px;font-weight:750;margin-top:auto;padding-top:3px;white-space:nowrap}
+.cal-scheduled-total{color:#a9c9ff}.cal-income-total{color:#9aefb8;margin-top:2px}
+.inline-calendar .calendar-grid .cal-touch .daily-spend{font-size:9px;text-align:left}
+.calendar-hint{font-size:11px;color:#90a3ba;text-align:center;margin:4px 0 0}
+.calendar-detail-row{display:flex;align-items:center;gap:9px;padding:13px 0;border-bottom:1px solid #314057}
+.calendar-detail-icon{width:33px;height:33px;flex:0 0 33px;display:flex;align-items:center;justify-content:center}
+.calendar-detail-icon .sub-logo{max-width:31px;max-height:31px;object-fit:contain}
+.calendar-detail-text{flex:1;min-width:0}.calendar-detail-text b{display:block;font-size:14px;overflow-wrap:anywhere}.calendar-detail-text small{display:block;color:#9bacc0;font-size:11px;margin-top:3px}
+.calendar-detail-row strong{font-size:13px;white-space:nowrap}.calendar-detail-row button{font-size:11px;padding:7px 8px;white-space:nowrap}
+.calendar-positive{color:#a8f0b6}
