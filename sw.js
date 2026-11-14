@@ -1,5 +1,5 @@
 // Spendwise cache repair: network-first, offline fallback. Never touches user data.
-const CACHE = 'spendwise-v2-3-15-fix-4';
+const CACHE = 'spendwise-v2-3-17-beta-1';
 const ASSETS = ['./index.html', './style.css', './app.js', './manifest.webmanifest', './icon.png'];
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(ASSETS)).then(() => self.skipWaiting()));

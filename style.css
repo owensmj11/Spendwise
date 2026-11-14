@@ -200,3 +200,12 @@ nav button .calendar-nav-icon{display:block;width:27px;height:27px;margin:0 auto
 .snapshot-grid .snapshot-cell:nth-child(odd){border-right:0}
 
 .primary.delete-solid{background:#dc3545;color:#ffffff;border:1px solid #f05a66;font-weight:850}.primary.delete-solid:active{background:#b91f31}
+
+/* 2.3.17: flush debt quadrant and continuous dividers */
+.snapshot-grid{padding:0;overflow:hidden;isolation:isolate}
+.snapshot-grid::before{top:0;bottom:0;z-index:2}
+.snapshot-cell{padding:23px 21px}
+.snapshot-debt{border-radius:0 0 0 12px;background:linear-gradient(130deg,rgba(195,35,54,.56),rgba(105,20,37,.3))}
+.snapshot-cell:nth-child(-n+2){border-bottom:1px solid #304158}
+.debt-progress-simple{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:#e9eef8;margin:6px 0}
+.debt-progress-simple span:last-child{margin-left:auto}
