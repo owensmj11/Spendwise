@@ -158,3 +158,35 @@ nav button .calendar-nav-icon{display:block;width:27px;height:27px;margin:0 auto
 .category-icon-edit{border:0;background:#26384a;border-radius:12px;min-width:42px;min-height:42px;font-size:23px;cursor:pointer}
 .reorder-label{display:flex;align-items:center;gap:10px;min-width:0;flex-wrap:wrap}
 .reorder-label .muted{width:100%}
+
+/* 2.3.14 compact layout and accessible category editing */
+#settingsBtn[hidden]{display:none!important}
+.category-sticky{position:sticky;top:-13px;z-index:4;background:#172337;padding:14px 0 9px;margin-top:-3px;border-bottom:1px solid #304056;margin-bottom:10px}
+.category-sticky .modal-month{margin:0;color:#9aabc1}
+.reorder-item{min-height:58px;padding:9px 12px;gap:9px}
+.reorder-label.category-edit-row{display:flex;align-items:center;gap:10px;flex:1;min-width:0;background:transparent;border:0;color:#e9eef8;text-align:left;padding:0;cursor:pointer;font:inherit}
+.category-edit-row b{min-width:0;overflow-wrap:anywhere;font-size:14px}
+.category-edit-row .category-budget{margin-left:auto;white-space:nowrap;color:#a8b8cb;font-size:14px}
+.category-edit-row .category-icon-edit{display:grid;place-items:center;flex:0 0 38px;min-width:38px;min-height:38px;border-radius:10px;font-size:21px}
+.category-wrap{padding:12px 14px 10px!important;margin-bottom:10px!important}
+.category-wrap .cat-toggle{min-height:48px!important;padding:0 0 7px!important}
+.category-wrap .symbol{width:38px;height:38px;font-size:20px}
+.category-wrap .budget-track,.category-wrap .mini{margin-top:7px!important}
+.debt-group{border:1px solid #3a4457;border-radius:20px;overflow:hidden;background:#151f30;margin-bottom:18px}
+.debt-group-row{padding:14px 16px 10px;background:linear-gradient(105deg,rgba(176,35,65,var(--debt-opacity)),rgba(120,29,50,calc(var(--debt-opacity)*.4)) 70%,transparent);border-bottom:1px solid #344056}
+.debt-group-row:last-child{border-bottom:0}
+.debt-group-row summary{display:flex;align-items:center;justify-content:space-between;gap:12px;list-style:none;cursor:pointer}
+.debt-group-row summary::-webkit-details-marker{display:none}
+.debt-group-row summary b{font-size:16px}
+.debt-group-row summary small{display:block;color:#b8a8b4;margin-top:3px;font-size:12px}
+.debt-group-row summary strong{color:#ffadbc;font-size:17px;white-space:nowrap}
+.debt-group-row summary strong.debt-zero{color:#e9eef8}
+.debt-group-row .debt-progress-info{margin:10px 0 6px;font-size:11px;align-items:flex-start}
+.debt-group-row .debt-progress-info b{white-space:nowrap}
+.debt-group-row .debt-progress-track{height:7px;margin-bottom:1px;background:#303b4b}
+.debt-group-row .debt-progress-fill{background:linear-gradient(90deg,#aa304b,#f05a74)}
+.debt-group-row .debt-group-details{display:none;padding-top:12px}
+.debt-group-row[open] .debt-group-details{display:block}
+.debt-group-row .debt-group-details .row{padding:8px 0;border-bottom:1px solid #344056}
+
+.debt-group-row summary{display:block}.debt-heading{display:flex;align-items:center;justify-content:space-between;gap:12px}.debt-group-row summary .debt-progress-info{pointer-events:none}
