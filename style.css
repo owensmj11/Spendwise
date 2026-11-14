@@ -198,3 +198,5 @@ nav button .calendar-nav-icon{display:block;width:27px;height:27px;margin:0 auto
 .snapshot-grid{position:relative}
 .snapshot-grid::before{content:"";position:absolute;top:16px;bottom:16px;left:50%;width:1px;background:#304158;pointer-events:none}
 .snapshot-grid .snapshot-cell:nth-child(odd){border-right:0}
+
+.primary.delete-solid{background:#dc3545;color:#ffffff;border:1px solid #f05a66;font-weight:850}.primary.delete-solid:active{background:#b91f31}
