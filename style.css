@@ -212,3 +212,8 @@ nav button .calendar-nav-icon{display:block;width:27px;height:27px;margin:0 auto
 
 /* 2.3.18: retirement balances are informational, not interactive. */
 .retirement-static{cursor:default;pointer-events:none;}
+
+/* 2.3.19: exactly one bottom clearance; the app previously stacked two spacers. */
+.app{padding-bottom:0}
+#view{padding-bottom:calc(92px + env(safe-area-inset-bottom,0px))}
+#view{touch-action:pan-y}

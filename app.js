@@ -343,7 +343,44 @@ function calendarDayDetails(date){
 function newSubscription(){modal(`<h2>Add subscription</h2><label class="field">Subscription name</label><input id="newSubName" maxlength="70" placeholder="Service name"><p id="subAddError" class="note danger"></p><div class="btnrow"><button class="secondary" id="subAddCancel">Cancel</button><button class="primary" id="subAddContinue">Continue</button></div>`);document.getElementById('subAddCancel').onclick=close;document.getElementById('subAddContinue').onclick=()=>{let name=document.getElementById('newSubName').value.trim();if(!name||name.length>70){document.getElementById('subAddError').textContent='Enter a subscription name.';return}if((data.subcategories.Subscriptions||[]).some(x=>x.name.toLowerCase()===name.toLowerCase())){document.getElementById('subAddError').textContent='Subscription already exists.';return}data.subcategories.Subscriptions??=[];data.subcategories.Subscriptions.push({name,budget:0});save();subscriptionSetup([name],0)}}
 function calendarView(){let y=Number(month.slice(0,4)),m=Number(month.slice(5)),days=new Date(y,m,0).getDate(),first=new Date(y,m-1,1).getDay(),cells=Array.from({length:first},()=>'<div></div>');for(let d=1;d<=days;d++){let a=data.bills.filter(b=>billOccurs(b,y,m,d));cells.push(`<div class="calday"><b>${d}</b>${a.map(b=>`<small>${subIcon(b.name)} ${esc(b.name)}<br>${fmt(b.amount)}</small>`).join('')}</div>`)}modal(`<h2>Due-date calendar</h2><p class="note">${esc(month)} · reminders only, no transactions posted</p><div class="calendar-grid">${['S','M','T','W','T','F','S'].map(d=>`<b>${d}</b>`).join('')}${cells.join('')}</div><div class="row"><b>Expected this month</b><b>${fmt(data.bills.filter(b=>Array.from({length:days},(_,i)=>billOccurs(b,y,m,i+1)).some(Boolean)).reduce((a,b)=>a+b.amount,0))}</b></div><button class="secondary" id="doneCal" style="width:100%">Done</button>`);document.getElementById('doneCal').onclick=close}
 
-document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{tab=b.dataset.tab;selectedCategory=null;expandedSub=null;render();window.scrollTo(0,0)});document.getElementById('homeBrand').onclick=()=>{close();tab='home';selectedCategory=null;expandedSub=null;render();window.scrollTo(0,0)};render();if('serviceWorker'in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('./sw.js').catch(()=>{});
+const TAB_ORDER=['home','history','finances'];
+const tabScroll={home:0,history:0,finances:0};
+function switchTab(next,{animate=false}={}){
+  if(!TAB_ORDER.includes(next)||next===tab||!document.getElementById('modal').hidden)return;
+  const previous=tab;tabScroll[previous]=window.scrollY;
+  tab=next;selectedCategory=null;expandedSub=null;
+  render();window.scrollTo({top:tabScroll[next]||0,behavior:'instant'});
+  if(animate){
+    const view=document.getElementById('view');
+    const direction=TAB_ORDER.indexOf(next)>TAB_ORDER.indexOf(previous)?1:-1;
+    view.animate([{opacity:.76,transform:`translateX(${direction*16}px)`},{opacity:1,transform:'translateX(0)'}],{duration:170,easing:'ease-out'});
+  }
+}
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>switchTab(b.dataset.tab));
+document.getElementById('homeBrand').onclick=()=>{if(!document.getElementById('modal').hidden)close();switchTab('home')};
+// Horizontal page gestures. Never hijack a modal, form, slider or horizontal scroller.
+let pageSwipe=null;
+const swipeExcluded=el=>!!el.closest('input,select,textarea,button,a,[contenteditable],.sheet,.modal,[role="slider"],.reorder-item,.reorder-grip,.monthnav,.calendar-grid,[data-swipe-ignore]');
+document.getElementById('view').addEventListener('touchstart',e=>{
+  pageSwipe=null;if(e.touches.length!==1||!document.getElementById('modal').hidden||swipeExcluded(e.target))return;
+  const el=e.target;for(let p=el;p&&p!==document.getElementById('view');p=p.parentElement){if(p.scrollWidth>p.clientWidth+8&&getComputedStyle(p).overflowX!=='visible')return;}
+  pageSwipe={x:e.touches[0].clientX,y:e.touches[0].clientY,time:Date.now(),axis:null};
+},{passive:true});
+document.getElementById('view').addEventListener('touchmove',e=>{
+  if(!pageSwipe||e.touches.length!==1)return;
+  const dx=e.touches[0].clientX-pageSwipe.x,dy=e.touches[0].clientY-pageSwipe.y;
+  if(!pageSwipe.axis&&Math.max(Math.abs(dx),Math.abs(dy))>12)pageSwipe.axis=Math.abs(dx)>Math.abs(dy)*1.3?'horizontal':'vertical';
+},{passive:true});
+document.getElementById('view').addEventListener('touchend',e=>{
+  if(!pageSwipe||!document.getElementById('modal').hidden){pageSwipe=null;return;}
+  const g=pageSwipe;pageSwipe=null;if(g.axis!=='horizontal'||!e.changedTouches.length)return;
+  const dx=e.changedTouches[0].clientX-g.x,dy=e.changedTouches[0].clientY-g.y;
+  if(Math.abs(dx)<65||Math.abs(dx)<Math.abs(dy)*1.5||Date.now()-g.time>900)return;
+  const next=TAB_ORDER.indexOf(tab)+(dx<0?1:-1);
+  if(next>=0&&next<TAB_ORDER.length)switchTab(TAB_ORDER[next],{animate:true});
+},{passive:true});
+document.getElementById('view').addEventListener('touchcancel',()=>{pageSwipe=null},{passive:true});
+render();if('serviceWorker'in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('./sw.js').catch(()=>{});
 // Reversible payments: event delegation survives re-rendered finance cards.
 document.addEventListener('click',e=>{const b=e.target.closest('[data-payment-edit]');if(b){e.preventDefault();editDebtPayment(b.dataset.paymentEdit)}});
 
