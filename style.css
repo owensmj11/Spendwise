@@ -209,3 +209,6 @@ nav button .calendar-nav-icon{display:block;width:27px;height:27px;margin:0 auto
 .snapshot-cell:nth-child(-n+2){border-bottom:1px solid #304158}
 .debt-progress-simple{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:#e9eef8;margin:6px 0}
 .debt-progress-simple span:last-child{margin-left:auto}
+
+/* 2.3.18: retirement balances are informational, not interactive. */
+.retirement-static{cursor:default;pointer-events:none;}
