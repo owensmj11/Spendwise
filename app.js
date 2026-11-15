@@ -255,8 +255,7 @@ function enableCategoryReordering(){
 // iOS Safari: suppress gesture zoom and double-tap zoom; preserve taps and scrolling.
 document.addEventListener('gesturestart',e=>e.preventDefault(),{passive:false});
 document.addEventListener('gesturechange',e=>e.preventDefault(),{passive:false});
-let lastTouchEnd=0;
-document.addEventListener('touchend',e=>{const now=Date.now();if(now-lastTouchEnd<300&&e.changedTouches.length===1)e.preventDefault();lastTouchEnd=now},{passive:false});
+// Native iOS tap handling: do not cancel rapid taps globally.
 
 
 const money=n=>Math.round((Number(n)+Number.EPSILON)*100)/100;
@@ -374,26 +373,3 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-legacy-pay
 
 // Amount-entry ergonomics: iOS decimal pad, select existing amount once on focus.
 document.addEventListener('focusin',e=>{const el=e.target;if(!(el instanceof HTMLInputElement))return;if(el.type!=='number'||el.readOnly)return;el.setAttribute('inputmode','decimal');requestAnimationFrame(()=>{try{el.select()}catch(_){}})});
-
-// Swipe-to-dismiss is nonblocking: never call window.confirm from touch handlers.
-// A completed downward gesture closes the sheet and releases the overlay.
-(function(){
- const sheet=document.querySelector('.sheet');
- const overlay=document.getElementById('modal');
- let start=null;
- const reset=()=>{start=null};
- sheet.addEventListener('touchstart',e=>{
-   reset();
-   if(overlay.hidden||e.touches.length!==1||e.target.closest('input,select,textarea,button,[contenteditable]'))return;
-   start={x:e.touches[0].clientX,y:e.touches[0].clientY,scrollTop:sheet.scrollTop};
- },{passive:true});
- sheet.addEventListener('touchcancel',reset,{passive:true});
- sheet.addEventListener('touchend',e=>{
-   if(!start||overlay.hidden||!e.changedTouches.length){reset();return}
-   const gesture=start;reset();
-   const dy=e.changedTouches[0].clientY-gesture.y;
-   const dx=Math.abs(e.changedTouches[0].clientX-gesture.x);
-   if(dy<90||dx>dy*0.65||gesture.scrollTop>2||sheet.scrollTop>2)return;
-   close();
- },{passive:true});
-})();
