@@ -262,3 +262,7 @@ nav button{font-weight:500!important;line-height:1.15;white-space:normal!importa
 .category-wrap:nth-of-type(11n+1) .symbol{border:1.5px solid #60a5fa;color:#60a5fa}
 .category-wrap:nth-of-type(11n+2) .symbol{border:1.5px solid #34d399;color:#34d399}
 .category-wrap:nth-of-type(11n+3) .symbol{border:1.5px solid #fbbf24;color:#fbbf24}
+
+.whatif-card{background:#142539;border:1px solid #33475e;border-radius:15px;padding:15px;margin:14px 0;color:#e7edf8}.whatif-card b{display:block;margin-bottom:9px}.whatif-card div{line-height:1.55}.whatif-track{height:9px;border-radius:9px;background:#39455a;margin-top:12px;overflow:hidden}.whatif-track>div{height:100%;background:#ff526e;border-radius:9px;transition:width .2s}.whatif-card:nth-of-type(2) .whatif-track>div{background:#55b7ff}
+
+.whatif-card:has(#whatIfSavings) .whatif-track>div{background:#55b7ff}
