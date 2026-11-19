@@ -257,3 +257,8 @@ nav button{font-weight:500!important;line-height:1.15;white-space:normal!importa
 
 /* 2.3.28 visual alignment */
 .retirement-card{background:linear-gradient(145deg,#27203e 0%,#1d233b 58%,#152236 100%);border-color:#4c3d69}.retirement-card .retirement-row{border-color:#50456c}.retirement-total-pill{background:linear-gradient(110deg,#443367,#614887);color:#e1c8ff;border:1px solid #8164b4;cursor:pointer;font-weight:700;font-size:16px}.wealth-header{display:flex;align-items:center;justify-content:space-between;width:100%;border:0;background:none;color:inherit;padding:0;text-align:left;cursor:pointer;gap:14px}.wealth-header .employer-label{display:block;margin:0 0 10px}.wealth-value{display:block;font-size:clamp(28px,7vw,40px);letter-spacing:-1px;color:#a7f0c4}.wealth-expanded{padding-top:12px}.wealth-expanded .secondary{width:100%;margin:10px 0}.year-chart-point{cursor:pointer;outline:none}.year-chart-point:focus-visible circle:last-of-type{stroke:#fff;stroke-width:3}.annual-card{scroll-margin-top:100px}.line-chart svg{overflow:visible}.line-chart{margin-bottom:26px}.wealth-inline{padding-bottom:22px}.log-category-icon svg,.category-icon svg{width:25px;height:25px;display:block;margin:auto}
+
+/* 2.3.29 category icons use the segment palette */
+.category-wrap:nth-of-type(11n+1) .symbol{border:1.5px solid #60a5fa;color:#60a5fa}
+.category-wrap:nth-of-type(11n+2) .symbol{border:1.5px solid #34d399;color:#34d399}
+.category-wrap:nth-of-type(11n+3) .symbol{border:1.5px solid #fbbf24;color:#fbbf24}
