@@ -176,7 +176,21 @@ function budgetBreakdown(){
  const ring=(r,w,start,portion,color,opacity=1)=>{const circumference=2*Math.PI*r;return `<circle cx="150" cy="150" r="${r}" fill="none" stroke="${color}" stroke-opacity="${opacity}" stroke-width="${w}" stroke-dasharray="${Math.max(0,circumference*portion/360).toFixed(3)} ${circumference.toFixed(3)}" transform="rotate(${start-90} 150 150)"/>`};
  let angle=0;const icons={Groceries:'cart',Gasoline:'fuel',Alcohol:'beer',Subscriptions:'repeat',Medical:'medical',Phone:'phone',Dining:'dining','Dining Out':'dining',Tobacco:'smoke'};
  const symbol={cart:'<path d="M2 4h3l2 12h12l2-9H6M9 20h1m7 0h1"/>',fuel:'<path d="M5 21V5h11v16M3 21h15M7 8h7v5H7m9-5 3 3v7q0 3 3 1V9l-3-3"/>',beer:'<path d="M4 4h13v17H5L4 4m13 3h3q3 0 2 4t-5 4M7 8h7"/>',repeat:'<path d="M4 8a8 8 0 0 1 14-2l2 2m0-5v5h-5M20 16a8 8 0 0 1-14 2l-2-2m0 5v-5h5"/>',medical:'<path d="M9 3h6v6h6v6h-6v6H9v-6H3V9h6z"/>',phone:'<rect x="6" y="2" width="12" height="20" rx="2"/><path d="M10 18h4"/>',dining:'<path d="M4 3v8m4-8v8m-4-4h4m-2 4v10M17 3q5 5 0 11v7"/>',smoke:'<path d="M3 15h18v4H3zM17 15v4M6 11q-3-3 0-6m5 6q-3-3 0-6"/>'};
- const segments=cats.map((x,i)=>{const portion=x.value/budget*360,start=angle;angle+=portion;const color=palette[i%palette.length],used=Math.min(1,x.used/x.value),mid=(start+portion/2-90)*Math.PI/180,icon=icons[x.name]||'generic';const graphic=symbol[icon]||'';const iconMarkup=graphic&&portion>=23?`<g transform="translate(${(cx+Math.cos(mid)*97-9).toFixed(2)} ${(cy+Math.sin(mid)*97-9).toFixed(2)}) scale(.75)" fill="none" stroke="${color}" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" pointer-events="none">${graphic}</g>`:'';return `<g>${ring(97,29,start,Math.max(0,portion-1),color,.2)}${ring(97,29,start,Math.max(0,portion*used-1),color)}${ring(97,40,start,Math.max(0,portion-.3),'transparent')}<circle class="budget-hit" data-budget-category="${esc(x.name)}" cx="150" cy="150" r="97" fill="none" stroke="transparent" stroke-width="40" stroke-dasharray="${(2*Math.PI*97*portion/360).toFixed(3)} ${2*Math.PI*97}" transform="rotate(${start-90} 150 150)" role="button" tabindex="0" aria-label="${esc(x.name)} budget"/>${iconMarkup}</g>`}).join('');
+ // Rocket Money-inspired category wheel: solid color-coded arcs with narrow breaks.
+ // Icons sit on the arc at the junction between adjacent categories, rather than
+ // floating in the center of a filled wedge. Tiny categories have no icon.
+ const gapDegrees=1.7;
+ const segments=cats.map((x,i)=>{
+   const portion=x.value/budget*360,start=angle;angle+=portion;
+   const color=palette[i%palette.length],icon=icons[x.name],graphic=symbol[icon]||'';
+   const visible=Math.max(0,portion-gapDegrees),arcStart=start+gapDegrees/2;
+   const mid=(start+portion/2-90)*Math.PI/180;
+   // Large enough to be useful as a touch target, but don't crowd small slices.
+   const showIcon=graphic&&portion>=20;
+   const r=97, ix=cx+Math.cos(mid)*r,iy=cy+Math.sin(mid)*r;
+   const iconMarkup=showIcon?`<g pointer-events="none"><circle cx="${ix.toFixed(2)}" cy="${iy.toFixed(2)}" r="12.5" fill="#142d31"/><g transform="translate(${(ix-9).toFixed(2)} ${(iy-9).toFixed(2)}) scale(.75)" fill="none" stroke="${color}" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">${graphic}</g></g>`:'';
+   return `<g>${ring(r,29,arcStart,visible,color)}<circle class="budget-hit" data-budget-category="${esc(x.name)}" cx="150" cy="150" r="${r}" fill="none" stroke="transparent" stroke-width="40" stroke-dasharray="${(2*Math.PI*r*portion/360).toFixed(3)} ${(2*Math.PI*r).toFixed(3)}" transform="rotate(${start-90} 150 150)" role="button" tabindex="0" aria-label="${esc(x.name)} budget"/>${iconMarkup}</g>`;
+ }).join('');
  const incomeRing=checks.length&&income>0?checks.map((x,i)=>{const share=Number(x.net||0)/income*360,prior=checks.slice(0,i).reduce((v,c)=>v+Number(c.net||0)/income*360,0);return ring(144,7,prior,Math.max(0,share-1),x.actual?'#86efac':'#285746')}).join(''):ring(144,7,0,360,'#285746');
  const loanOriginal={'OneMain':5000,'Upstart':5900};
  const allDebts=Object.entries(data.debts||{});
