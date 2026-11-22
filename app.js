@@ -188,8 +188,8 @@ function budgetBreakdown(){
    // Large enough to be useful as a touch target, but don't crowd small slices.
    const showIcon=graphic&&portion>=20;
    const r=97, ix=cx+Math.cos(mid)*r,iy=cy+Math.sin(mid)*r;
-   const iconMarkup=showIcon?`<g pointer-events="none"><circle cx="${ix.toFixed(2)}" cy="${iy.toFixed(2)}" r="10" fill="#142d31"/><g transform="translate(${(ix-7.2).toFixed(2)} ${(iy-7.2).toFixed(2)}) scale(.60)" fill="none" stroke="${color}" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">${graphic}</g></g>`:'';
-   return `<g>${ring(r,18,arcStart,visible,color)}<circle class="budget-hit" data-budget-category="${esc(x.name)}" cx="150" cy="150" r="${r}" fill="none" stroke="transparent" stroke-width="40" stroke-dasharray="${(2*Math.PI*r*portion/360).toFixed(3)} ${(2*Math.PI*r).toFixed(3)}" transform="rotate(${start-90} 150 150)" role="button" tabindex="0" aria-label="${esc(x.name)} budget"/>${iconMarkup}</g>`;
+   const iconMarkup=showIcon?`<g pointer-events="none"><circle cx="${ix.toFixed(2)}" cy="${iy.toFixed(2)}" r="8.5" fill="#142d31"/><g transform="translate(${(ix-5.76).toFixed(2)} ${(iy-5.76).toFixed(2)}) scale(.48)" fill="none" stroke="${color}" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">${graphic}</g></g>`:'';
+   return `<g>${ring(r,9,arcStart,visible,color)}<circle class="budget-hit" data-budget-category="${esc(x.name)}" cx="150" cy="150" r="${r}" fill="none" stroke="transparent" stroke-width="40" stroke-dasharray="${(2*Math.PI*r*portion/360).toFixed(3)} ${(2*Math.PI*r).toFixed(3)}" transform="rotate(${start-90} 150 150)" role="button" tabindex="0" aria-label="${esc(x.name)} budget"/>${iconMarkup}</g>`;
  }).join('');
  const incomeRing=checks.length&&income>0?checks.map((x,i)=>{const share=Number(x.net||0)/income*360,prior=checks.slice(0,i).reduce((v,c)=>v+Number(c.net||0)/income*360,0);return ring(144,7,prior,Math.max(0,share-1),x.actual?'#86efac':'#285746')}).join(''):ring(144,7,0,360,'#285746');
  const loanOriginal={'OneMain':5000,'Upstart':5900};
